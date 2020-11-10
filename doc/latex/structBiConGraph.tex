@@ -1,0 +1,37 @@
+\hypertarget{structBiConGraph}{}\section{Bi\+Con\+Graph Struct Reference}
+\label{structBiConGraph}\index{Bi\+Con\+Graph@{Bi\+Con\+Graph}}
+
+
+The struct containing a graph, its heteregeneous edges, homogenous components, and current translator set.  
+
+
+
+
+{\ttfamily \#include $<$Bi\+Con\+Graph.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structGraph}{Graph} \hyperlink{structBiConGraph_a6e6dd2faccdfa16fce565b126ba40804}{graph}\hypertarget{structBiConGraph_a6e6dd2faccdfa16fce565b126ba40804}{}\label{structBiConGraph_a6e6dd2faccdfa16fce565b126ba40804}
+
+\begin{DoxyCompactList}\small\item\em The graph. \end{DoxyCompactList}\item 
+bool $\ast$ \hyperlink{structBiConGraph_a37b0d5cb9db5516e27d7940f236c1663}{heterogeneous\+Edges}\hypertarget{structBiConGraph_a37b0d5cb9db5516e27d7940f236c1663}{}\label{structBiConGraph_a37b0d5cb9db5516e27d7940f236c1663}
+
+\begin{DoxyCompactList}\small\item\em The edges that are heterogeneous (taking into account the translators). \end{DoxyCompactList}\item 
+bool $\ast$$\ast$ \hyperlink{structBiConGraph_a175e31bc5f0e497829b04165a2b057b5}{homogeneous\+Components}\hypertarget{structBiConGraph_a175e31bc5f0e497829b04165a2b057b5}{}\label{structBiConGraph_a175e31bc5f0e497829b04165a2b057b5}
+
+\begin{DoxyCompactList}\small\item\em The homogeneous connected components. Each member is an array of size {\ttfamily graph.\+num\+Nodes} that sets all nodes in a connected component to true and other to false. There are {\ttfamily num\+Components} such arrays, and a node is true in exactly one array. \end{DoxyCompactList}\item 
+bool $\ast$ \hyperlink{structBiConGraph_af9549214f0f2b873d5a26d5af5f1d28a}{translators}\hypertarget{structBiConGraph_af9549214f0f2b873d5a26d5af5f1d28a}{}\label{structBiConGraph_af9549214f0f2b873d5a26d5af5f1d28a}
+
+\begin{DoxyCompactList}\small\item\em The translator nodes. \end{DoxyCompactList}\item 
+int \hyperlink{structBiConGraph_a32eb750cae2879890a32924bb2fe8e8e}{num\+Components}\hypertarget{structBiConGraph_a32eb750cae2879890a32924bb2fe8e8e}{}\label{structBiConGraph_a32eb750cae2879890a32924bb2fe8e8e}
+
+\begin{DoxyCompactList}\small\item\em The number of homogeneous components. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The struct containing a graph, its heteregeneous edges, homogenous components, and current translator set. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+Bi\+Con\+Problem/\hyperlink{BiConGraph_8h}{Bi\+Con\+Graph.\+h}\end{DoxyCompactItemize}

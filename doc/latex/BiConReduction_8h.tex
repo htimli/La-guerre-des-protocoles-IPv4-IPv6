@@ -1,0 +1,176 @@
+\hypertarget{BiConReduction_8h}{}\section{include/\+Bi\+Con\+Problem/\+Bi\+Con\+Reduction.h File Reference}
+\label{BiConReduction_8h}\index{include/\+Bi\+Con\+Problem/\+Bi\+Con\+Reduction.\+h@{include/\+Bi\+Con\+Problem/\+Bi\+Con\+Reduction.\+h}}
+
+
+An implementation of the Coca project for 2020 year. Converts a 2-\/coloured graph g and an integer p to a formula true if and only if it exists a translator set of size p. Provides functions to generate the formula and the necessary variables, alongside function to decode a solution from a model of the formula.  
+
+
+{\ttfamily \#include \char`\"{}Graph.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Bi\+Con\+Graph.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$z3.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Z3\+\_\+ast \hyperlink{BiConReduction_8h_a612846c8d38fd830fd7138aafe745387}{get\+Variable\+Is\+Ith\+Translator} (Z3\+\_\+context ctx, int node, int number)
+\begin{DoxyCompactList}\small\item\em Get the Variable representing that the node is the {\ttfamily number} translator. \end{DoxyCompactList}\item 
+Z3\+\_\+ast \hyperlink{BiConReduction_8h_a5bdd911e2e9ac7eb2eb938c90e5fd490}{get\+Variable\+Parent} (Z3\+\_\+context ctx, int child, int parent)
+\begin{DoxyCompactList}\small\item\em Get the Variable p\+\_\+\{{\ttfamily child},{\ttfamily parent\}} representing that the connected component {\ttfamily parent} is the parent of the connected component {\ttfamily child} in the reduction. \end{DoxyCompactList}\item 
+Z3\+\_\+ast \hyperlink{BiConReduction_8h_ae70c7114d2ac8f6f7a9ee0551c69cc2d}{get\+Variable\+Level\+In\+Spanning\+Tree} (Z3\+\_\+context ctx, int level, int component)
+\begin{DoxyCompactList}\small\item\em Get the Variable l\+\_\+\{{\ttfamily component},{\ttfamily level\}} representing that the connected component {\ttfamily component} is at level {\ttfamily level} in the spanning tree. \end{DoxyCompactList}\item 
+Z3\+\_\+ast \hyperlink{BiConReduction_8h_afa63ed8795a9ad9ec0bd9003a5fb388b}{Bi\+Con\+Reduction} (Z3\+\_\+context ctx, \hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph, int size)
+\begin{DoxyCompactList}\small\item\em Generates a S\+AT formula satisfiable if and only if there is a set of translators of size {\ttfamily size} such that the graph admits a valid path between any two nodes. \end{DoxyCompactList}\item 
+void \hyperlink{BiConReduction_8h_a031de5c6a6639cbd04c39327024f2c54}{get\+Translator\+Set\+From\+Model} (Z3\+\_\+context ctx, Z3\+\_\+model model, \hyperlink{structBiConGraph}{Bi\+Con\+Graph} $\ast$graph, int size)
+\begin{DoxyCompactList}\small\item\em Gets the translator set from a model and adds it to the \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An implementation of the Coca project for 2020 year. Converts a 2-\/coloured graph g and an integer p to a formula true if and only if it exists a translator set of size p. Provides functions to generate the formula and the necessary variables, alongside function to decode a solution from a model of the formula. 
+
+\begin{DoxyAuthor}{Author}
+Vincent Penelle (\href{mailto:vincent.penelle@u-bordeaux.fr}{\tt vincent.\+penelle@u-\/bordeaux.\+fr}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2020-\/10-\/22
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Creative Commons 
+\end{DoxyCopyright}
+
+
+\subsection{Function Documentation}
+\index{Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}!Bi\+Con\+Reduction@{Bi\+Con\+Reduction}}
+\index{Bi\+Con\+Reduction@{Bi\+Con\+Reduction}!Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}}
+\subsubsection[{\texorpdfstring{Bi\+Con\+Reduction(\+Z3\+\_\+context ctx, Bi\+Con\+Graph graph, int size)}{BiConReduction(Z3_context ctx, BiConGraph graph, int size)}}]{\setlength{\rightskip}{0pt plus 5cm}Z3\+\_\+ast Bi\+Con\+Reduction (
+\begin{DoxyParamCaption}
+\item[{Z3\+\_\+context}]{ctx, }
+\item[{{\bf Bi\+Con\+Graph}}]{graph, }
+\item[{int}]{size}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConReduction_8h_afa63ed8795a9ad9ec0bd9003a5fb388b}{}\label{BiConReduction_8h_afa63ed8795a9ad9ec0bd9003a5fb388b}
+
+
+Generates a S\+AT formula satisfiable if and only if there is a set of translators of size {\ttfamily size} such that the graph admits a valid path between any two nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The solver context. \\
+\hline
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em size} & The size of the translator set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Z3\+\_\+ast The formula. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+graph must be an initialized \hyperlink{structBiConGraph}{Bi\+Con\+Graph} with computed connected components. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}!get\+Translator\+Set\+From\+Model@{get\+Translator\+Set\+From\+Model}}
+\index{get\+Translator\+Set\+From\+Model@{get\+Translator\+Set\+From\+Model}!Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}}
+\subsubsection[{\texorpdfstring{get\+Translator\+Set\+From\+Model(\+Z3\+\_\+context ctx, Z3\+\_\+model model, Bi\+Con\+Graph $\ast$graph, int size)}{getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size)}}]{\setlength{\rightskip}{0pt plus 5cm}void get\+Translator\+Set\+From\+Model (
+\begin{DoxyParamCaption}
+\item[{Z3\+\_\+context}]{ctx, }
+\item[{Z3\+\_\+model}]{model, }
+\item[{{\bf Bi\+Con\+Graph} $\ast$}]{graph, }
+\item[{int}]{size}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConReduction_8h_a031de5c6a6639cbd04c39327024f2c54}{}\label{BiConReduction_8h_a031de5c6a6639cbd04c39327024f2c54}
+
+
+Gets the translator set from a model and adds it to the \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The solver context. \\
+\hline
+{\em model} & A variable assignment. \\
+\hline
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em size} & The size of the translator set.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily model} must be a valid model. 
+
+{\ttfamily graph} must be a valid \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}!get\+Variable\+Is\+Ith\+Translator@{get\+Variable\+Is\+Ith\+Translator}}
+\index{get\+Variable\+Is\+Ith\+Translator@{get\+Variable\+Is\+Ith\+Translator}!Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}}
+\subsubsection[{\texorpdfstring{get\+Variable\+Is\+Ith\+Translator(\+Z3\+\_\+context ctx, int node, int number)}{getVariableIsIthTranslator(Z3_context ctx, int node, int number)}}]{\setlength{\rightskip}{0pt plus 5cm}Z3\+\_\+ast get\+Variable\+Is\+Ith\+Translator (
+\begin{DoxyParamCaption}
+\item[{Z3\+\_\+context}]{ctx, }
+\item[{int}]{node, }
+\item[{int}]{number}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConReduction_8h_a612846c8d38fd830fd7138aafe745387}{}\label{BiConReduction_8h_a612846c8d38fd830fd7138aafe745387}
+
+
+Get the Variable representing that the node is the {\ttfamily number} translator. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The solver context. \\
+\hline
+{\em node} & The node identifier. \\
+\hline
+{\em number} & The index of the translator. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Z3\+\_\+ast A formula representing y\+\_\+\{{\ttfamily node},{\ttfamily number\}} 
+\end{DoxyReturn}
+\index{Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}!get\+Variable\+Level\+In\+Spanning\+Tree@{get\+Variable\+Level\+In\+Spanning\+Tree}}
+\index{get\+Variable\+Level\+In\+Spanning\+Tree@{get\+Variable\+Level\+In\+Spanning\+Tree}!Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}}
+\subsubsection[{\texorpdfstring{get\+Variable\+Level\+In\+Spanning\+Tree(\+Z3\+\_\+context ctx, int level, int component)}{getVariableLevelInSpanningTree(Z3_context ctx, int level, int component)}}]{\setlength{\rightskip}{0pt plus 5cm}Z3\+\_\+ast get\+Variable\+Level\+In\+Spanning\+Tree (
+\begin{DoxyParamCaption}
+\item[{Z3\+\_\+context}]{ctx, }
+\item[{int}]{level, }
+\item[{int}]{component}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConReduction_8h_ae70c7114d2ac8f6f7a9ee0551c69cc2d}{}\label{BiConReduction_8h_ae70c7114d2ac8f6f7a9ee0551c69cc2d}
+
+
+Get the Variable l\+\_\+\{{\ttfamily component},{\ttfamily level\}} representing that the connected component {\ttfamily component} is at level {\ttfamily level} in the spanning tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The solver context. \\
+\hline
+{\em level} & The level. \\
+\hline
+{\em component} & The number of the component. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Z3\+\_\+ast A formula representing l\+\_\+\{{\ttfamily component},{\ttfamily level\}} 
+\end{DoxyReturn}
+\index{Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}!get\+Variable\+Parent@{get\+Variable\+Parent}}
+\index{get\+Variable\+Parent@{get\+Variable\+Parent}!Bi\+Con\+Reduction.\+h@{Bi\+Con\+Reduction.\+h}}
+\subsubsection[{\texorpdfstring{get\+Variable\+Parent(\+Z3\+\_\+context ctx, int child, int parent)}{getVariableParent(Z3_context ctx, int child, int parent)}}]{\setlength{\rightskip}{0pt plus 5cm}Z3\+\_\+ast get\+Variable\+Parent (
+\begin{DoxyParamCaption}
+\item[{Z3\+\_\+context}]{ctx, }
+\item[{int}]{child, }
+\item[{int}]{parent}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConReduction_8h_a5bdd911e2e9ac7eb2eb938c90e5fd490}{}\label{BiConReduction_8h_a5bdd911e2e9ac7eb2eb938c90e5fd490}
+
+
+Get the Variable p\+\_\+\{{\ttfamily child},{\ttfamily parent\}} representing that the connected component {\ttfamily parent} is the parent of the connected component {\ttfamily child} in the reduction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The solver context. \\
+\hline
+{\em child} & The number of a connected component. \\
+\hline
+{\em parent} & The number of a connected component. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Z3\+\_\+ast A formula representing p\+\_\+\{{\ttfamily child},{\ttfamily parent\}}. 
+\end{DoxyReturn}

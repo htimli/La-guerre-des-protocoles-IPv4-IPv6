@@ -1,0 +1,353 @@
+\hypertarget{BiConGraph_8h}{}\section{include/\+Bi\+Con\+Problem/\+Bi\+Con\+Graph.h File Reference}
+\label{BiConGraph_8h}\index{include/\+Bi\+Con\+Problem/\+Bi\+Con\+Graph.\+h@{include/\+Bi\+Con\+Problem/\+Bi\+Con\+Graph.\+h}}
+
+
+Structure to store a graph with heterogeneous edges informations for the Bi\+Con Problem.  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}Graph.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structBiConGraph}{Bi\+Con\+Graph}
+\begin{DoxyCompactList}\small\item\em The struct containing a graph, its heteregeneous edges, homogenous components, and current translator set. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structBiConGraph}{Bi\+Con\+Graph} \hyperlink{BiConGraph_8h_a8d50b4da0e4b852fed8c87f5024ee9e0}{initialize\+Graph} (\hyperlink{structGraph}{Graph} graph)
+\begin{DoxyCompactList}\small\item\em Initializes the struct from a graph. Does N\+O\+T creates a copy of the graph. Starts with empty translators. \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_aa301728bd2e13cd3f24fcd61bc621943}{reset\+Translator} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} $\ast$graph)
+\begin{DoxyCompactList}\small\item\em Resets the translator set to empty, and recomputes heterogeneous edges and connected components. \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_a79f656334939b8788f85c680250eae3e}{delete\+Bi\+Con\+Graph} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph)
+\begin{DoxyCompactList}\small\item\em Frees the additional informations of a \hyperlink{structBiConGraph}{Bi\+Con\+Graph}, but N\+OT the graph (cf initialize). \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_aa23eb249b74efb756f38fbbe65d40b94}{set\+Heterogeneous\+Edge} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} $\ast$graph, int node1, int node2)
+\begin{DoxyCompactList}\small\item\em Set the edge ({\ttfamily node1},{\ttfamily node2}) as heterogeneous (if it exists, otherwise does nothing). \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_a47980672cd29bddbab52b0924b9f45c5}{Set\+Homogeneous\+Edge} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} $\ast$graph, int node1, int node2)
+\begin{DoxyCompactList}\small\item\em Set the edge ({\ttfamily node1},{\ttfamily node2}) as heterogeneous (if it exists, otherwise does nothing). \end{DoxyCompactList}\item 
+bool \hyperlink{BiConGraph_8h_a73fd903adeb65ee5729c50aa80337e0a}{is\+Edge\+Homogeneous} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph, int node1, int node2)
+\item 
+bool \hyperlink{BiConGraph_8h_a42fef96765d83fbf8b637c7d679acc20}{is\+Edge\+Heterogeneous} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph, int node1, int node2)
+\item 
+void \hyperlink{BiConGraph_8h_a2c3ac8a8ac75ff81df504e1466f7e8fc}{add\+Translator} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} $\ast$graph, int node)
+\begin{DoxyCompactList}\small\item\em Sets nodes to be a translator, and recomputes homogeneous components. \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_a80c7a0499571828b8e1965720d541093}{computes\+Homogeneous\+Components} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} $\ast$graph)
+\begin{DoxyCompactList}\small\item\em Computes the homogeneous components. \end{DoxyCompactList}\item 
+bool \hyperlink{BiConGraph_8h_ae86e3f30dcc8ab386ed87061aec05cfe}{are\+In\+Same\+Component} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph, int node1, int node2)
+\begin{DoxyCompactList}\small\item\em Tests if {\ttfamily node1} and {\ttfamily node2} are in the same homogeneous component. \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_a46863086c53d3f500d711b1e69d27571}{print\+Translator} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph)
+\begin{DoxyCompactList}\small\item\em Displays the translator set of the \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \end{DoxyCompactList}\item 
+void \hyperlink{BiConGraph_8h_a7861e948f2959b8c0530f3f01750df9f}{create\+Dot\+Of\+Bi\+Con\+Graph} (\hyperlink{structBiConGraph}{Bi\+Con\+Graph} graph, char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Creates the file (\char`\"{}\%s.\+dot\char`\"{},name) representing the solution to the problem described by {\ttfamily set}, or (\char`\"{}result.\+dot\char`\"{}) if name is N\+U\+LL. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Structure to store a graph with heterogeneous edges informations for the Bi\+Con Problem. 
+
+\begin{DoxyAuthor}{Author}
+Vincent Penelle (\href{mailto:vincent.penelle@u-bordeaux.fr}{\tt vincent.\+penelle@u-\/bordeaux.\+fr}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2020-\/10-\/22
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Creative Commons. 
+\end{DoxyCopyright}
+
+
+\subsection{Function Documentation}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!add\+Translator@{add\+Translator}}
+\index{add\+Translator@{add\+Translator}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{add\+Translator(\+Bi\+Con\+Graph $\ast$graph, int node)}{addTranslator(BiConGraph *graph, int node)}}]{\setlength{\rightskip}{0pt plus 5cm}void add\+Translator (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph} $\ast$}]{graph, }
+\item[{int}]{node}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a2c3ac8a8ac75ff81df504e1466f7e8fc}{}\label{BiConGraph_8h_a2c3ac8a8ac75ff81df504e1466f7e8fc}
+
+
+Sets nodes to be a translator, and recomputes homogeneous components. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em node} & A node.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+graph must be valid. 
+
+node $<$ graph.\+graph.\+num\+Nodes. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!are\+In\+Same\+Component@{are\+In\+Same\+Component}}
+\index{are\+In\+Same\+Component@{are\+In\+Same\+Component}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{are\+In\+Same\+Component(\+Bi\+Con\+Graph graph, int node1, int node2)}{areInSameComponent(BiConGraph graph, int node1, int node2)}}]{\setlength{\rightskip}{0pt plus 5cm}bool are\+In\+Same\+Component (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph}}]{graph, }
+\item[{int}]{node1, }
+\item[{int}]{node2}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_ae86e3f30dcc8ab386ed87061aec05cfe}{}\label{BiConGraph_8h_ae86e3f30dcc8ab386ed87061aec05cfe}
+
+
+Tests if {\ttfamily node1} and {\ttfamily node2} are in the same homogeneous component. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em node1} & A node. \\
+\hline
+{\em node2} & A node. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If {\ttfamily node1} and {\ttfamily node2} are in the same homogeneous component. 
+
+false Otherwise.
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be a valid \hyperlink{structBiConGraph}{Bi\+Con\+Graph} 
+
+{\ttfamily node1} $<$ {\ttfamily graph.\+graph.\+num\+Nodes} 
+
+{\ttfamily node2} $<$ {\ttfamily graph.\+graph.\+num\+Nodes} 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!computes\+Homogeneous\+Components@{computes\+Homogeneous\+Components}}
+\index{computes\+Homogeneous\+Components@{computes\+Homogeneous\+Components}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{computes\+Homogeneous\+Components(\+Bi\+Con\+Graph $\ast$graph)}{computesHomogeneousComponents(BiConGraph *graph)}}]{\setlength{\rightskip}{0pt plus 5cm}void computes\+Homogeneous\+Components (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph} $\ast$}]{graph}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a80c7a0499571828b8e1965720d541093}{}\label{BiConGraph_8h_a80c7a0499571828b8e1965720d541093}
+
+
+Computes the homogeneous components. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & a \hyperlink{structBiConGraph}{Bi\+Con\+Graph}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+graph must be a valid \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!create\+Dot\+Of\+Bi\+Con\+Graph@{create\+Dot\+Of\+Bi\+Con\+Graph}}
+\index{create\+Dot\+Of\+Bi\+Con\+Graph@{create\+Dot\+Of\+Bi\+Con\+Graph}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{create\+Dot\+Of\+Bi\+Con\+Graph(\+Bi\+Con\+Graph graph, char $\ast$name)}{createDotOfBiConGraph(BiConGraph graph, char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}void create\+Dot\+Of\+Bi\+Con\+Graph (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph}}]{graph, }
+\item[{char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a7861e948f2959b8c0530f3f01750df9f}{}\label{BiConGraph_8h_a7861e948f2959b8c0530f3f01750df9f}
+
+
+Creates the file (\char`\"{}\%s.\+dot\char`\"{},name) representing the solution to the problem described by {\ttfamily set}, or (\char`\"{}result.\+dot\char`\"{}) if name is N\+U\+LL. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A graph. \\
+\hline
+{\em name} & The name of the output file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be a valid graph. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!delete\+Bi\+Con\+Graph@{delete\+Bi\+Con\+Graph}}
+\index{delete\+Bi\+Con\+Graph@{delete\+Bi\+Con\+Graph}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{delete\+Bi\+Con\+Graph(\+Bi\+Con\+Graph graph)}{deleteBiConGraph(BiConGraph graph)}}]{\setlength{\rightskip}{0pt plus 5cm}void delete\+Bi\+Con\+Graph (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph}}]{graph}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a79f656334939b8788f85c680250eae3e}{}\label{BiConGraph_8h_a79f656334939b8788f85c680250eae3e}
+
+
+Frees the additional informations of a \hyperlink{structBiConGraph}{Bi\+Con\+Graph}, but N\+OT the graph (cf initialize). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be valid. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!initialize\+Graph@{initialize\+Graph}}
+\index{initialize\+Graph@{initialize\+Graph}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{initialize\+Graph(\+Graph graph)}{initializeGraph(Graph graph)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Bi\+Con\+Graph} initialize\+Graph (
+\begin{DoxyParamCaption}
+\item[{{\bf Graph}}]{graph}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a8d50b4da0e4b852fed8c87f5024ee9e0}{}\label{BiConGraph_8h_a8d50b4da0e4b852fed8c87f5024ee9e0}
+
+
+Initializes the struct from a graph. Does N\+O\+T creates a copy of the graph. Starts with empty translators. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A graph \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structBiConGraph}{Bi\+Con\+Graph} The corresponding \hyperlink{structBiConGraph}{Bi\+Con\+Graph} with no translator. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be a valid graph. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!is\+Edge\+Heterogeneous@{is\+Edge\+Heterogeneous}}
+\index{is\+Edge\+Heterogeneous@{is\+Edge\+Heterogeneous}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{is\+Edge\+Heterogeneous(\+Bi\+Con\+Graph graph, int node1, int node2)}{isEdgeHeterogeneous(BiConGraph graph, int node1, int node2)}}]{\setlength{\rightskip}{0pt plus 5cm}bool is\+Edge\+Heterogeneous (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph}}]{graph, }
+\item[{int}]{node1, }
+\item[{int}]{node2}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a42fef96765d83fbf8b637c7d679acc20}{}\label{BiConGraph_8h_a42fef96765d83fbf8b637c7d679acc20}
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em node1} & A node. \\
+\hline
+{\em node2} & A node. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if ({\ttfamily node1}, {\ttfamily node2}) is an heterogeneous edge.
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be valid. 
+
+{\ttfamily node1} $<$ {\ttfamily graph.\+graph.\+num\+Nodes}. 
+
+{\ttfamily node2} $<$ {\ttfamily graph.\+graph.\+num\+Nodes}. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!is\+Edge\+Homogeneous@{is\+Edge\+Homogeneous}}
+\index{is\+Edge\+Homogeneous@{is\+Edge\+Homogeneous}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{is\+Edge\+Homogeneous(\+Bi\+Con\+Graph graph, int node1, int node2)}{isEdgeHomogeneous(BiConGraph graph, int node1, int node2)}}]{\setlength{\rightskip}{0pt plus 5cm}bool is\+Edge\+Homogeneous (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph}}]{graph, }
+\item[{int}]{node1, }
+\item[{int}]{node2}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a73fd903adeb65ee5729c50aa80337e0a}{}\label{BiConGraph_8h_a73fd903adeb65ee5729c50aa80337e0a}
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em node1} & A node. \\
+\hline
+{\em node2} & A node. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if ({\ttfamily node1}, {\ttfamily node2}) is an homogeneous edge.
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be valid. 
+
+{\ttfamily node1} $<$ {\ttfamily graph.\+graph.\+num\+Nodes}. 
+
+{\ttfamily node2} $<$ {\ttfamily graph.\+graph.\+num\+Nodes}. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!print\+Translator@{print\+Translator}}
+\index{print\+Translator@{print\+Translator}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{print\+Translator(\+Bi\+Con\+Graph graph)}{printTranslator(BiConGraph graph)}}]{\setlength{\rightskip}{0pt plus 5cm}void print\+Translator (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph}}]{graph}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a46863086c53d3f500d711b1e69d27571}{}\label{BiConGraph_8h_a46863086c53d3f500d711b1e69d27571}
+
+
+Displays the translator set of the \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be a valid \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!reset\+Translator@{reset\+Translator}}
+\index{reset\+Translator@{reset\+Translator}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{reset\+Translator(\+Bi\+Con\+Graph $\ast$graph)}{resetTranslator(BiConGraph *graph)}}]{\setlength{\rightskip}{0pt plus 5cm}void reset\+Translator (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph} $\ast$}]{graph}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_aa301728bd2e13cd3f24fcd61bc621943}{}\label{BiConGraph_8h_aa301728bd2e13cd3f24fcd61bc621943}
+
+
+Resets the translator set to empty, and recomputes heterogeneous edges and connected components. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be valid. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!set\+Heterogeneous\+Edge@{set\+Heterogeneous\+Edge}}
+\index{set\+Heterogeneous\+Edge@{set\+Heterogeneous\+Edge}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{set\+Heterogeneous\+Edge(\+Bi\+Con\+Graph $\ast$graph, int node1, int node2)}{setHeterogeneousEdge(BiConGraph *graph, int node1, int node2)}}]{\setlength{\rightskip}{0pt plus 5cm}void set\+Heterogeneous\+Edge (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph} $\ast$}]{graph, }
+\item[{int}]{node1, }
+\item[{int}]{node2}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_aa23eb249b74efb756f38fbbe65d40b94}{}\label{BiConGraph_8h_aa23eb249b74efb756f38fbbe65d40b94}
+
+
+Set the edge ({\ttfamily node1},{\ttfamily node2}) as heterogeneous (if it exists, otherwise does nothing). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em node1} & A node. \\
+\hline
+{\em node2} & A node.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be valid. 
+
+{\ttfamily node1} $<$ {\ttfamily graph-\/$>$graph.\+num\+Nodes}. 
+
+{\ttfamily node2} $<$ {\ttfamily graph-\/$>$graph.\+num\+Nodes}. 
+\end{DoxyPrecond}
+\index{Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}!Set\+Homogeneous\+Edge@{Set\+Homogeneous\+Edge}}
+\index{Set\+Homogeneous\+Edge@{Set\+Homogeneous\+Edge}!Bi\+Con\+Graph.\+h@{Bi\+Con\+Graph.\+h}}
+\subsubsection[{\texorpdfstring{Set\+Homogeneous\+Edge(\+Bi\+Con\+Graph $\ast$graph, int node1, int node2)}{SetHomogeneousEdge(BiConGraph *graph, int node1, int node2)}}]{\setlength{\rightskip}{0pt plus 5cm}void Set\+Homogeneous\+Edge (
+\begin{DoxyParamCaption}
+\item[{{\bf Bi\+Con\+Graph} $\ast$}]{graph, }
+\item[{int}]{node1, }
+\item[{int}]{node2}
+\end{DoxyParamCaption}
+)}\hypertarget{BiConGraph_8h_a47980672cd29bddbab52b0924b9f45c5}{}\label{BiConGraph_8h_a47980672cd29bddbab52b0924b9f45c5}
+
+
+Set the edge ({\ttfamily node1},{\ttfamily node2}) as heterogeneous (if it exists, otherwise does nothing). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & A \hyperlink{structBiConGraph}{Bi\+Con\+Graph}. \\
+\hline
+{\em node1} & A node. \\
+\hline
+{\em node2} & A node.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+{\ttfamily graph} must be valid. 
+
+{\ttfamily node1} $<$ {\ttfamily graph-\/$>$graph.\+num\+Nodes}. 
+
+{\ttfamily node2} $<$ {\ttfamily graph-\/$>$graph.\+num\+Nodes}. 
+\end{DoxyPrecond}
