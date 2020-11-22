@@ -101,6 +101,30 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
     }
     Z3_ast phi_1b = Z3_mk_and(ctx, n, each_u); 
     
+    //phi_a
+    Z3_ast phi_1a_1b[2]={phi_1b,phi_1a};
+    Z3_ast phi_a = Z3_mk_and(ctx,2,phi_1a_1b);
+    
+    //phi_r2
+    Z3_ast Lit_l_j0;
+    for(int j=1; j<maxJ;j++){
+        if (isFormulaSat(ctx,Lit_l_jh[j][0]))
+            Lit_l_j0 = Lit_l_jh[j][0];
+    }
+    Z3_ast each_CC[maxJ];
+    for(int y=1; y<maxJ;y++){
+        if(Lit_l_j0 != Lit_l_jh[y][0]){
+            Z3_ast neg_Lit_l_jh=Z3_mk_not(ctx,Lit_l_jh[y][0]);
+             each_CC[y] = neg_Lit_l_jh;
+        }     
+    }
+    Z3_ast conj =Z3_mk_and(ctx, maxJ-1, each_CC);
+    
+    
+    Z3_ast tmp[2]={Lit_l_j0,conj};
+
+    Z3_ast phi_r2 = Z3_mk_and(ctx,2,tmp);
+
 
 
 
