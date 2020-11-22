@@ -28,13 +28,13 @@ Z3_ast getVariableLevelInSpanningTree(Z3_context ctx, int level, int component){
 Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
     printf("Reduction not implemented\n");
 
-    // Usefull values
+    //***** Usefull values
     int n = orderG(biGraph.graph);
     int k = size;
     int maxJ = biGraph.numComponents;
     int maxH = maxJ;
 
-    // Creating tabs with each literals once and for all
+    //***** Creating tabs with each literals once and for all
     Z3_ast Lit_x_ui[n][k];
     Z3_ast Lit_p_j1j2[maxJ][maxJ];
     Z3_ast Lit_l_jh[maxJ][maxH];
@@ -51,13 +51,30 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
         for (int h=0; h<maxH; h++)
             Lit_l_jh[j][h] = getVariableParent(ctx, h, j);
 
+    //***** Computing Formula
+    Z3_ast phi_a = compute_phi_a(ctx, Lit_x_ui, n, k);
+
+    Z3_ast each_CC[maxJ];
+    for (int j=0; j<maxJ; j++) {
+        Z3_ast phi_racine = compute_phi_racine(ctx, j, Lit_p_j1j2, Lit_l_jh, maxJ, maxH);
+        Z3_ast phi_composante_quelconque = compute_phi_composante_quelconque(ctx, biGraph, j, Lit_x_ui, Lit_p_j1j2, Lit_l_jh, n, k, maxJ, maxH);
+        Z3_ast disj_r_cq = {phi_racine, phi_composante_quelconque};
+        each_CC[j] = Z3_mk_or(ctx, 2, disj_r_cq);
+    }
+    Z3_ast conj_CC = Z3_mk_and(ctx, maxJ, each_CC);
+
+    Z3_ast conj_g_k[2] = {phi_a, conj_CC};
+    Z3_ast phi_G_k = Z3_mk_and(ctx, 2, conj_g_k);
+    return phi_G_k;
+}
 
 
-    /***************************/
-    /********** Phi_a **********/
-    /***************************/
 
-    //***** Phi_a1
+/***************************/
+/********** Phi_a **********/
+/***************************/
+
+Z3_ast compute_phi_a1(Z3_context ctx, Z3_ast **Lit_x_ui, int n, int k) {
     Z3_ast each_u[n];
     for (int u=0; u<n; u++) {
         Z3_ast each_v[n-1];
@@ -71,18 +88,20 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
                     Z3_ast x_ui = Lit_x_ui[u][i];
                     Z3_ast x_vi = Lit_x_ui[v][i];
                     Z3_ast neg_u_v[2] = {Z3_mk_not(ctx, x_ui), Z3_mk_not(ctx, x_vi)};
-                    Z3_ast disj = Z3_mk_or(ctx, 2, neg_u_v);    // => not(x_ui) or not(x_vi)
+                    Z3_ast disj = Z3_mk_or(ctx, 2, neg_u_v);
                     each_tranlator[i] = disj;
                 }
-                Z3_ast conj_translators = Z3_mk_and(ctx, k, each_tranlator); // AND on each translator
+                Z3_ast conj_translators = Z3_mk_and(ctx, k, each_tranlator);
                 each_v[v - shift] = conj_translators;
             }
         }
-        each_u[u] = Z3_mk_and(ctx, n-1, each_v);  // for each vertex u : AND on each vertex v
+        each_u[u] = Z3_mk_and(ctx, n-1, each_v);
     }
-    Z3_ast phi_a1 = Z3_mk_and(ctx, n, each_u);  // => AND on each vertex u
-    
-    //***** Phi_a2
+    Z3_ast phi_a1 = Z3_mk_and(ctx, n, each_u);
+    return phi_a1;
+}
+
+Z3_ast compute_phi_a2(Z3_context ctx, Z3_ast **Lit_x_ui, int n, int k) {
     Z3_ast each_u[n];
     for(int u=0; u<n; u++) {
         Z3_ast each_translator_i1[k];
@@ -106,40 +125,23 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
         each_u[u] =  Z3_mk_and(ctx, k, each_translator_i1);
     }
     Z3_ast phi_a2 = Z3_mk_and(ctx, n, each_u); 
-    
-    //***** Phi_a
-    Z3_ast phi_a_composantes[2] = {phi_a1, phi_a2};
-    Z3_ast phi_a = Z3_mk_and(ctx, 2, phi_a_composantes);
-    
-
-
-    /********************************/
-    /********** Phi_racine **********/
-    /********************************/
-
-    //***** Phi_r2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    return Z3_mk_true(ctx); 
+    return phi_a2;
 }
 
+Z3_ast compute_phi_a(Z3_context ctx, Z3_ast **Lit_x_ui, int n, int k) {
+    Z3_ast phi_a1 = compute_phi_a1(ctx, Lit_x_ui, n, k);
+    Z3_ast phi_a2 = compute_phi_a1(ctx, Lit_x_ui, n, k);
+
+    Z3_ast conj_phi_a[2] = {phi_a1, phi_a2};
+    Z3_ast phi_a = Z3_mk_and(ctx, 2, conj_phi_a);
+    return phi_a;
+}
+
+
+
+/********************************/
+/********** Phi_racine **********/
+/********************************/
 
 Z3_ast compute_phi_r2(Z3_context ctx, int j1, Z3_ast **Lit_l_jh, int maxJ) {
     Z3_ast l_j10 = Lit_l_jh[j1][0];
@@ -160,6 +162,43 @@ Z3_ast compute_phi_r2(Z3_context ctx, int j1, Z3_ast **Lit_l_jh, int maxJ) {
     Z3_ast phi_r2 = Z3_mk_and(ctx, 2, conj);
     return phi_r2;
 }
+
+Z3_ast compute_phi_racine(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int maxJ, int maxH) {
+    Z3_ast phi_r1 = compute_phi_r1(ctx, j, Lit_p_j1j2, maxJ);
+    Z3_ast phi_r2 = compute_phi_r2(ctx, j, Lit_l_jh, maxJ);
+
+    Z3_ast conj[2] = {phi_r1, phi_r2};
+    Z3_ast phi_racine = Z3_mk_and(ctx, 2, conj);
+    return phi_racine;
+}
+
+
+
+/***********************************************/
+/********** Phi_composante_quelconque **********/
+/***********************************************/
+
+Z3_ast compute_phi_composante_quelconque (Z3_context ctx, BiConGraph biGraph, int j1, Z3_ast **Lit_x_ui, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int n, int k, int maxJ, int maxH) {
+    Z3_ast phi_b = compute_phi_b(ctx, j1, Lit_p_j1j2, maxJ);
+    Z3_ast phi_c = compute_phi_c(ctx, j1, Lit_l_jh, maxH);
+
+    Z3_ast each_phi_d[maxJ-1];
+    int shift = 0;
+    for (int j2=0; j2<maxJ; j2++) {
+        if (j2 == j1)
+            shift = 1;
+        else {
+            Z3_ast phi_d = compute_phi_d(ctx, biGraph, j1, j2, Lit_x_ui, Lit_p_j1j2, Lit_l_jh, k, maxH);
+            each_phi_d[j2 - shift] = phi_d;
+        }
+    }
+    Z3_ast disj_phi_d = Z3_mk_or(ctx, maxJ-1, each_phi_d);
+
+    Z3_ast conj_cq[3] = {phi_b, phi_c, disj_phi_d};
+    Z3_ast phi_composante_quelconque = Z3_mk_and(ctx, 3, conj_cq);
+    return phi_composante_quelconque;
+}
+
 
 
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
