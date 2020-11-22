@@ -52,78 +52,73 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
             Lit_l_jh[j][h] = getVariableParent(ctx, h, j);
 
 
-    // Example phi_1,a
+
+    /***************************/
+    /********** Phi_a **********/
+    /***************************/
+
+    //***** Phi_a1
     Z3_ast each_u[n];
     for (int u=0; u<n; u++) {
         Z3_ast each_v[n-1];
+        int shift = 0;
         for (int v=0; v<n; v++) {
-            int shift = 0;
             if (v == u)
                 shift = 1;
             else {
-                Z3_ast each_tranlator[size];
-                for (int i=1; i<=size; i++) {
+                Z3_ast each_tranlator[k];
+                for (int i=0; i<k; i++) {
                     Z3_ast x_ui = Lit_x_ui[u][i];
                     Z3_ast x_vi = Lit_x_ui[v][i];
                     Z3_ast neg_u_v[2] = {Z3_mk_not(ctx, x_ui), Z3_mk_not(ctx, x_vi)};
-                    Z3_ast disj = Z3_mk_or(ctx, 2, neg_u_v);    // => (not(x_ui) or not(x_vi))
+                    Z3_ast disj = Z3_mk_or(ctx, 2, neg_u_v);    // => not(x_ui) or not(x_vi)
                     each_tranlator[i] = disj;
                 }
-                Z3_ast conj_translators = Z3_mk_and(ctx, size, each_tranlator); // => le grand ET sur tous les i
+                Z3_ast conj_translators = Z3_mk_and(ctx, k, each_tranlator); // AND on each translator
                 each_v[v - shift] = conj_translators;
             }
         }
-        each_u[u] = Z3_mk_and(ctx, n-1, each_v);  // => pour chaque u, le grand ET sur tous les v
+        each_u[u] = Z3_mk_and(ctx, n-1, each_v);  // for each vertex u : AND on each vertex v
     }
-    Z3_ast phi_1a = Z3_mk_and(ctx, n, each_u);  // => le grand ET sur tous les u et v
-    //phi_1,b
-    //Z3_ast each_u[n];
-    for(int u=0;u<n;u++){
-        Z3_ast each_translator_1[size];
-        for(int i=1;i<=size;i++){
-            Z3_ast each_translator_2[size];
-            int shift=0;
-            for(int j=1;j<=size;j++){
-                if(i==j)
-                    shift=1;
-                else{
-                    Z3_ast x_ui = Lit_x_ui[u][i];
-                    Z3_ast x_uj = Lit_x_ui[u][j];
-                    Z3_ast neg_ui_uj[2]={Z3_mk_not(ctx,x_ui),Z3_mk_not(ctx,x_uj)};
-                    Z3_ast disj = Z3_mk_or(ctx, 2, neg_ui_uj);
-                    each_translator_2[i]=disj; 
-                }          
+    Z3_ast phi_a1 = Z3_mk_and(ctx, n, each_u);  // => AND on each vertex u
+    
+    //***** Phi_a2
+    Z3_ast each_u[n];
+    for(int u=0; u<n; u++) {
+        Z3_ast each_translator_i1[k];
+        for(int i1=0; i1<k; i1++) {
+            Z3_ast each_translator_i2[k-1];
+            int shift = 0;
+            for(int i2=0; i2<k; i2++) {
+                if (i1 == i2)
+                    shift = 1;
+                else {
+                    Z3_ast x_ui1 = Lit_x_ui[u][i1];
+                    Z3_ast x_ui2 = Lit_x_ui[u][i2];
+                    Z3_ast neg_ui1_ui2[2] = {Z3_mk_not(ctx, x_ui1), Z3_mk_not(ctx, x_ui2)};
+                    Z3_ast disj = Z3_mk_or(ctx, 2, neg_ui1_ui2);
+                    each_translator_i2[i2 - shift] = disj;
+                }
             }
-            Z3_ast conj_translators =Z3_mk_and(ctx, size, each_translator_2);
-            each_translator_1[size-shift]=conj_translators;
+            Z3_ast conj_translators = Z3_mk_and(ctx, k-1, each_translator_i2);
+            each_translator_i1[i1] = conj_translators;
         }
-        each_u[u] =  Z3_mk_and(ctx, n-1, each_translator_1);
+        each_u[u] =  Z3_mk_and(ctx, k, each_translator_i1);
     }
-    Z3_ast phi_1b = Z3_mk_and(ctx, n, each_u); 
+    Z3_ast phi_a2 = Z3_mk_and(ctx, n, each_u); 
     
-    //phi_a
-    Z3_ast phi_1a_1b[2]={phi_1b,phi_1a};
-    Z3_ast phi_a = Z3_mk_and(ctx,2,phi_1a_1b);
+    //***** Phi_a
+    Z3_ast phi_a_composantes[2] = {phi_a1, phi_a2};
+    Z3_ast phi_a = Z3_mk_and(ctx, 2, phi_a_composantes);
     
-    //phi_r2
-    Z3_ast Lit_l_j0;
-    for(int j=1; j<maxJ;j++){
-        if (isFormulaSat(ctx,Lit_l_jh[j][0]))
-            Lit_l_j0 = Lit_l_jh[j][0];
-    }
-    Z3_ast each_CC[maxJ];
-    for(int y=1; y<maxJ;y++){
-        if(Lit_l_j0 != Lit_l_jh[y][0]){
-            Z3_ast neg_Lit_l_jh=Z3_mk_not(ctx,Lit_l_jh[y][0]);
-             each_CC[y] = neg_Lit_l_jh;
-        }     
-    }
-    Z3_ast conj =Z3_mk_and(ctx, maxJ-1, each_CC);
-    
-    
-    Z3_ast tmp[2]={Lit_l_j0,conj};
 
-    Z3_ast phi_r2 = Z3_mk_and(ctx,2,tmp);
+
+    /********************************/
+    /********** Phi_racine **********/
+    /********************************/
+
+    //***** Phi_r2
+
 
 
 
@@ -145,6 +140,26 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
     return Z3_mk_true(ctx); 
 }
 
+
+Z3_ast compute_phi_r2(Z3_context ctx, int j1, Z3_ast **Lit_l_jh, int maxJ) {
+    Z3_ast l_j10 = Lit_l_jh[j1][0];
+
+    Z3_ast each_neg[maxJ-1];
+    int shift = 0;
+    for (int j2=0; j2<maxJ; j2++) {
+        if (j1 == j2)
+            shift = 1;
+        else {
+            Z3_ast l_j20 = Lit_l_jh[j2][0];
+            each_neg[j2 - shift] = Z3_mk_not(ctx, l_j20);
+        }
+    }
+    Z3_ast each_CC = Z3_mk_and(ctx, maxJ-1, each_neg);
+
+    Z3_ast conj[2] = {l_j10, each_CC};
+    Z3_ast phi_r2 = Z3_mk_and(ctx, 2, conj);
+    return phi_r2;
+}
 
 
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
