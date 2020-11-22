@@ -288,6 +288,28 @@ Z3_ast compute_phi_composante_quelconque (Z3_context ctx, BiConGraph biGraph, in
     return phi_composante_quelconque;
 }
 
+/***************************/
+/********** Phi_c **********/
+/***************************/
+Z3_ast compute_phi_c(Z3_context ctx, int j, Z3_ast **Lit_l_jh,int maxH) {      
+        Z3_ast each_h[maxH];
+        for(int h=0;h<maxH;h++){
+            Z3_ast each_H[maxH-1];
+            for(int H=0;H<maxH;H++){
+                if(H!=h){
+                    Z3_ast l_j_H = Lit_l_jh[j][H];
+                    each_H[H]=Z3_mk_not(ctx,Lit_l_jh[j][H]);
+                }
+            }
+            Z3_ast not_l_j_H = Z3_mk_and(ctx,maxH-1,each_H);
+            Z3_ast l_j_h = Lit_l_jh[j][h];
+            Z3_ast tmp[2]={not_l_j_H,l_j_h};
+            each_h[h]=Z3_mk_and(ctx,2,tmp);
+        } 
+        Z3_ast phi_c = Z3_mk_and(ctx,maxH,each_h);
+        return phi_c;
+}
+
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
     return;
 }
