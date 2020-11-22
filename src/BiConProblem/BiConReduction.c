@@ -160,14 +160,31 @@ Z3_ast compute_phi_r2(Z3_context ctx, int j1, Z3_ast **Lit_l_jh, int maxJ) {
     Z3_ast phi_r2 = Z3_mk_and(ctx, 2, conj);
     return phi_r2;
 }
+Z3_ast compute_phi_r1(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, int maxJ) {
 
+        Z3_ast each_y[maxJ];
+        Z3_ast jz_and_not_jy[maxJ];
+        for(int y;y<maxJ-1;y++){
+            if(j!=y){
+                Z3_ast p_j_y = Lit_p_j1j2[j][y];
+                Z3_ast each_z[maxJ];
+                for(int z;z<maxJ-1;z++)               
+                    each_z[z]= Lit_p_j1j2[j][z];                                   
+                Z3_ast or_j_z=Z3_mk_or(ctx, maxJ,each_z);
+                Z3_ast tmp[2] ={Z3_mk_not(ctx,p_j_y),or_j_z}; 
+                jz_and_not_jy[y]=Z3_mk_and(ctx,2,tmp);
+            }
+            each_y[y] = Z3_mk_and(ctx, maxJ,jz_and_not_jy);   
+        }
+        return Z3_mk_and(ctx,maxJ,each_y);      
+}
 
 Z3_ast compute_phi_b(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, int maxJ) {
     //Example phi_b
     //Z3_ast Lit_p_j1j2[maxJ][maxJ];
 
         Z3_ast each_y[maxJ];
-        Z3_ast jz_and_not_jy[maxJ];
+        Z3_ast jy_and_not_jz[maxJ];
         for(int y;y<maxJ-1;y++){
             if(j!=y){
                 Z3_ast p_j_y = Lit_p_j1j2[j][y];
@@ -178,13 +195,14 @@ Z3_ast compute_phi_b(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, int maxJ) {
                 }
                 Z3_ast neg_j_z=Z3_mk_and(ctx, maxJ,each_z);
                 Z3_ast tmp[2] ={p_j_y,neg_j_z}; 
-                jz_and_not_jy[y]=Z3_mk_and(ctx,2,tmp);
+                jy_and_not_jz[y]=Z3_mk_and(ctx,2,tmp);
             }
-            each_y[y] = Z3_mk_or(ctx, maxJ,jz_and_not_jy);   
+            each_y[y] = Z3_mk_or(ctx, maxJ,jy_and_not_jz);   
         }
         Z3_ast phi_b = Z3_mk_and(ctx,maxJ,each_y);
         return phi_b;
 }
+
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
     return;
 }
