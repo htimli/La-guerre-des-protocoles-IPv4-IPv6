@@ -139,6 +139,41 @@ Z3_ast compute_phi_a(Z3_context ctx, Z3_ast **Lit_x_ui, int n, int k) {
 
 
 
+/***************************/
+/********** Phi_b **********/
+/***************************/
+
+Z3_ast compute_phi_b(Z3_context ctx, int j1, Z3_ast **Lit_p_j1j2, int maxJ) {
+    Z3_ast each_j2[maxJ-1];
+    int shift_1 = 0;
+    for(int j2=0; j2<maxJ; j2++){
+        if(j2 == j1)
+            shift_1 = 1;
+        else {
+            Z3_ast p_j1j2 = Lit_p_j1j2[j1][j2];
+
+            Z3_ast each_j3[maxJ-2];
+            int shift_2 = 0;
+            for(int j3=0; j3<maxJ; j3++){
+                if (j3 == j1 || j3 == j2)
+                    shift_2++;
+                else {
+                    Z3_ast p_j1j3 = Lit_p_j1j2[j1][j3];
+                    each_j3[j3 - shift_2] = Z3_mk_not(ctx, p_j1j3);
+                }
+            }
+            Z3_ast conj_neg_j1j3 = Z3_mk_and(ctx, maxJ-2, each_j3);
+
+            Z3_ast conj[2] ={p_j1j2, conj_neg_j1j3};
+            each_j2[j2 - shift_1] = Z3_mk_and(ctx,2, conj);
+        }
+    }
+    Z3_ast phi_b = Z3_mk_or(ctx, maxJ-1, each_j2);
+    return phi_b;
+}
+
+
+
 /********************************/
 /********** Phi_racine **********/
 /********************************/
@@ -161,6 +196,24 @@ Z3_ast compute_phi_r2(Z3_context ctx, int j1, Z3_ast **Lit_l_jh, int maxJ) {
     Z3_ast conj[2] = {l_j10, each_CC};
     Z3_ast phi_r2 = Z3_mk_and(ctx, 2, conj);
     return phi_r2;
+}
+Z3_ast compute_phi_r1(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, int maxJ) {
+
+        Z3_ast each_y[maxJ];
+        Z3_ast jz_and_not_jy[maxJ];
+        for(int y;y<maxJ-1;y++){
+            if(j!=y){
+                Z3_ast p_j_y = Lit_p_j1j2[j][y];
+                Z3_ast each_z[maxJ];
+                for(int z;z<maxJ-1;z++)               
+                    each_z[z]= Lit_p_j1j2[j][z];                                   
+                Z3_ast or_j_z=Z3_mk_or(ctx, maxJ,each_z);
+                Z3_ast tmp[2] ={Z3_mk_not(ctx,p_j_y),or_j_z}; 
+                jz_and_not_jy[y]=Z3_mk_and(ctx,2,tmp);
+            }
+            each_y[y] = Z3_mk_and(ctx, maxJ,jz_and_not_jy);   
+        }
+        return Z3_mk_and(ctx,maxJ,each_y);      
 }
 
 Z3_ast compute_phi_racine(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int maxJ, int maxH) {
@@ -198,8 +251,6 @@ Z3_ast compute_phi_composante_quelconque (Z3_context ctx, BiConGraph biGraph, in
     Z3_ast phi_composante_quelconque = Z3_mk_and(ctx, 3, conj_cq);
     return phi_composante_quelconque;
 }
-
-
 
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
     return;
