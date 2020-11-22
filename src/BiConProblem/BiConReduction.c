@@ -165,8 +165,7 @@ Z3_ast compute_phi_r2(Z3_context ctx, int j1, Z3_ast **Lit_l_jh, int maxJ) {
 Z3_ast compute_phi_b(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, int maxJ) {
     //Example phi_b
     //Z3_ast Lit_p_j1j2[maxJ][maxJ];
-    
-    
+
         Z3_ast each_y[maxJ];
         Z3_ast jz_and_not_jy[maxJ];
         for(int y;y<maxJ-1;y++){
@@ -184,7 +183,7 @@ Z3_ast compute_phi_b(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, int maxJ) {
             each_y[y] = Z3_mk_or(ctx, maxJ,jz_and_not_jy);   
         }
         Z3_ast phi_b = Z3_mk_and(ctx,maxJ,each_y);
-         
+        return phi_b;
 }
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
     return;
