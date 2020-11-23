@@ -73,5 +73,4 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph graph, int size);
  */
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size);
 
-
 #endif
