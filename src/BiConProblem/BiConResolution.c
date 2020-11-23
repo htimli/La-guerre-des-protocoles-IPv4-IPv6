@@ -66,7 +66,7 @@ bool BruteForceBiCon(BiConGraph *G)
 		indexTab[i]=0;
 		
 	for(int k=1 ; k<=n/2 ; k++){
-		for(int cb_size=1 ;cb_size<=k; cb++){
+		for(int cb_size=1 ;cb_size<=k; cb_size++){
 		
 			for(int i=0;i<cb_size;i++){
 				vertexBitMap[i]=1;
@@ -85,21 +85,23 @@ bool BruteForceBiCon(BiConGraph *G)
     return false;
 }
 bool GreedyBiCon(BiConGraph *graph){
-    
-	Graph g = graph.graph;
+	
+	Graph g = graph->graph;
 	int n = g.numNodes;
 
-	int nb_CC = g.numComponents;
+    BiConGraph Bg = initializeGraph(g);
+
+	int nb_CC = Bg.numComponents;
 	
 	while(nb_CC > 1){
 		for(int i = 0; i < n; i++){
 			for(int j = 0; j < n; j++){
-				if(isEdgeHomogeneous(graphe,i,j)){
-					graphe.translators[i] = true;
-					setHeterogeneousEdge(graphe,i,j);
-					if(est_solution(graphe))
+				if(isEdgeHomogeneous(Bg,i,j)){
+					Bg.translators[i] = true;
+					setHeterogeneousEdge(&Bg,i,j);
+					if(est_solution(&Bg))
 						return true;
-					computesHomogeneousComponents(&graphe);
+					computesHomogeneousComponents(&Bg);
 				}
 			}
 		}
