@@ -285,15 +285,15 @@ Z3_ast compute_phi_r1(Z3_context ctx, int j1, Z3_ast Lit_p_j1j2[][maxJ]) {
         else {
             Z3_ast p_j1j2 = Lit_p_j1j2[j1][j2];
 
-            Z3_ast each_j3[maxJ-2];
+            Z3_ast each_j3[maxJ-1];
             int shift_2 = 0;
             for(int j3=0; j3<maxJ; j3++) {
-                if (j3 == j1 || j3 == j2)
+                if (j3 == j2)
                     shift_2++;
                 else
                     each_j3[j3 - shift_2] = Lit_p_j1j2[j2][j3];
             }             
-            Z3_ast disj_j3 = Z3_mk_or(ctx, maxJ-2, each_j3);
+            Z3_ast disj_j3 = Z3_mk_or(ctx, maxJ-1, each_j3);
                                                  
             Z3_ast conj[2] = {Z3_mk_not(ctx, p_j1j2), disj_j3}; 
             each_j2[j2 - shift_1] = Z3_mk_and(ctx, 2, conj);
