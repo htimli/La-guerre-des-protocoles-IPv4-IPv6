@@ -179,9 +179,39 @@ Z3_ast compute_phi_b(Z3_context ctx, int j1, Z3_ast **Lit_p_j1j2, int maxJ) {
 
 
 /***************************/
-/********** Phi_d **********/
+/********** Phi_c **********/
 /***************************/
 
+//***** Phi_c
+Z3_ast compute_phi_c(Z3_context ctx, int j, Z3_ast **Lit_l_jh, int maxH) {      
+    Z3_ast each_h1[maxH];
+    for(int h1=0; h1<maxH; h1++){
+        Z3_ast l_jh1 = Lit_l_jh[j][h1];
+
+        Z3_ast each_h2[maxH-1];
+        int shift = 0;
+        for(int h2=0; h2<maxH; h2++) {
+            if (h2 == h1)
+                shift = 1;
+            else {
+                Z3_ast l_jh2 = Lit_l_jh[j][h2];
+                each_h2[h2 - shift] = Z3_mk_not(ctx, l_jh2);
+            }
+        }
+        Z3_ast conj_not_l_jh2 = Z3_mk_and(ctx, maxH-1, each_h2);
+
+        Z3_ast conj[2] = {l_jh1, conj_not_l_jh2};
+        each_h1[h1] = Z3_mk_and(ctx, 2, conj);
+    } 
+    Z3_ast phi_c = Z3_mk_or(ctx, maxH, each_h1);
+    return phi_c;
+}
+
+
+
+/***************************/
+/********** Phi_d **********/
+/***************************/
 
 //***** Phi_d
 Z3_ast compute_phi_d(Z3_context ctx, BiConGraph biGraph, int j1, int j2, Z3_ast **Lit_x_ui, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int k, int maxH) {
@@ -286,28 +316,6 @@ Z3_ast compute_phi_composante_quelconque (Z3_context ctx, BiConGraph biGraph, in
     Z3_ast conj_cq[3] = {phi_b, phi_c, disj_phi_d};
     Z3_ast phi_composante_quelconque = Z3_mk_and(ctx, 3, conj_cq);
     return phi_composante_quelconque;
-}
-
-/***************************/
-/********** Phi_c **********/
-/***************************/
-Z3_ast compute_phi_c(Z3_context ctx, int j, Z3_ast **Lit_l_jh,int maxH) {      
-        Z3_ast each_h[maxH];
-        for(int h=0;h<maxH;h++){
-            Z3_ast each_H[maxH-1];
-            for(int H=0;H<maxH;H++){
-                if(H!=h){
-                    Z3_ast l_j_H = Lit_l_jh[j][H];
-                    each_H[H]=Z3_mk_not(ctx,Lit_l_jh[j][H]);
-                }
-            }
-            Z3_ast not_l_j_H = Z3_mk_and(ctx,maxH-1,each_H);
-            Z3_ast l_j_h = Lit_l_jh[j][h];
-            Z3_ast tmp[2]={not_l_j_H,l_j_h};
-            each_h[h]=Z3_mk_and(ctx,2,tmp);
-        } 
-        Z3_ast phi_c = Z3_mk_and(ctx,maxH,each_h);
-        return phi_c;
 }
 
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
