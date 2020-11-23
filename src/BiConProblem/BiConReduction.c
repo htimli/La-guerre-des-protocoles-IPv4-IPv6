@@ -57,7 +57,7 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
     Z3_ast each_CC[maxJ];
     for (int j=0; j<maxJ; j++) {
         Z3_ast phi_racine = compute_phi_racine(ctx, j, Lit_p_j1j2, Lit_l_jh, maxJ, maxH);
-        Z3_ast phi_composante_quelconque = compute_phi_composante_quelconque(ctx, biGraph, j, Lit_x_ui, Lit_p_j1j2, Lit_l_jh, n, k, maxJ, maxH);
+        Z3_ast phi_composante_quelconque = compute_phi_composante_quelconque(ctx, biGraph, j, Lit_x_ui, Lit_p_j1j2, Lit_l_jh, k, maxJ, maxH);
         Z3_ast disj_r_cq = {phi_racine, phi_composante_quelconque};
         each_CC[j] = Z3_mk_or(ctx, 2, disj_r_cq);
     }
@@ -84,15 +84,15 @@ Z3_ast compute_phi_a1(Z3_context ctx, Z3_ast **Lit_x_ui, int n, int k) {
             if (v == u)
                 shift = 1;
             else {
-                Z3_ast each_tranlator[k];
+                Z3_ast each_translator[k];
                 for (int i=0; i<k; i++) {
                     Z3_ast x_ui = Lit_x_ui[u][i];
                     Z3_ast x_vi = Lit_x_ui[v][i];
                     Z3_ast neg_u_v[2] = {Z3_mk_not(ctx, x_ui), Z3_mk_not(ctx, x_vi)};
                     Z3_ast disj = Z3_mk_or(ctx, 2, neg_u_v);
-                    each_tranlator[i] = disj;
+                    each_translator[i] = disj;
                 }
-                Z3_ast conj_translators = Z3_mk_and(ctx, k, each_tranlator);
+                Z3_ast conj_translators = Z3_mk_and(ctx, k, each_translator);
                 each_v[v - shift] = conj_translators;
             }
         }
@@ -215,8 +215,32 @@ Z3_ast compute_phi_c(Z3_context ctx, int j, Z3_ast **Lit_l_jh, int maxH) {
 
 //***** Phi_convertisseur
 Z3_ast compute_phi_convertisseur(Z3_context ctx, BiConGraph biGraph, int j1, int j2, Z3_ast **Lit_x_ui, int k) {
+    int n = orderG(biGraph.graph);
 
-    return NULL;
+    Z3_ast each_uv[n*n];
+    for (int u=0; u<n; u++) {
+        for (int v=0; v<n; v++) {
+            Z3_ast disj;
+            if (isEdgeHeterogeneous(biGraph, u, v)) {
+                if (biGraph.homogeneousComponents[j1][u] && biGraph.homogeneousComponents[j2][v]) {
+                    Z3_ast each_translator[k];
+                    for (int i=0; i<k; i++) {
+                        Z3_ast x_ui = Lit_x_ui[u][i];
+                        Z3_ast x_vi = Lit_x_ui[v][i];
+                        Z3_ast conj[2] = {x_ui, x_vi};
+                        each_translator[i] = Z3_mk_or(ctx, 2, conj);
+                    }
+                    disj = Z3_mk_or(ctx, k, each_translator);
+                }
+            }
+            else
+                disj = Z3_mk_false(ctx);
+
+            each_uv[u*n + v] = disj;
+        }
+    }
+    Z3_ast phi_convertisseur = Z3_mk_or(ctx, n*n, each_uv);
+    return phi_convertisseur;
 }
 
 //***** Phi_contigu
@@ -327,7 +351,7 @@ Z3_ast compute_phi_racine(Z3_context ctx, int j, Z3_ast **Lit_p_j1j2, Z3_ast **L
 /***********************************************/
 
 //***** Phi_composante_quelconque
-Z3_ast compute_phi_composante_quelconque (Z3_context ctx, BiConGraph biGraph, int j1, Z3_ast **Lit_x_ui, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int n, int k, int maxJ, int maxH) {
+Z3_ast compute_phi_composante_quelconque (Z3_context ctx, BiConGraph biGraph, int j1, Z3_ast **Lit_x_ui, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int k, int maxJ, int maxH) {
     Z3_ast phi_b = compute_phi_b(ctx, j1, Lit_p_j1j2, maxJ);
     Z3_ast phi_c = compute_phi_c(ctx, j1, Lit_l_jh, maxH);
 
