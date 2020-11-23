@@ -12,7 +12,7 @@ bool est_solution(BiConGraph *graph)
 			if (isEdge(graph->graph, i, j))
 			{
 				if (getColor(graph->graph, i) != getColor(graph->graph, j &&
-																			(!(graph->translators[i]) || !(graph->translators[j]))))
+						(!(graph->translators[i]) || !(graph->translators[j]))))
 				{
 					return false;
 				}
@@ -70,12 +70,10 @@ bool BruteForceBiCon(BiConGraph *G)
 		vertexBitMap[i] = false;
 	for (int i = 0; i < n / 2 + 1; i++)
 		indexTab[i] = 0;
-
 	for (int k = 1; k <= n / 2; k++)
 	{
 		for (int cb_size = 1; cb_size <= k; cb_size++)
 		{
-
 			for (int i = 0; i < cb_size; i++)
 			{
 				vertexBitMap[i] = 1;
@@ -88,6 +86,7 @@ bool BruteForceBiCon(BiConGraph *G)
 					return true;
 				resetTranslator(G);
 			} while (prochaine_combinaison(cb_size, n, indexTab, vertexBitMap));
+			
 			for (int i = 0; i < n; i++)
 				vertexBitMap[i] = false;
 		}
