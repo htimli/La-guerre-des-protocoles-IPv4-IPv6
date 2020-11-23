@@ -95,13 +95,29 @@ Z3_ast compute_phi_a2(Z3_context ctx, Z3_ast Lit_x_ui[][k]) {
     return phi_a2;
 }
 
+//***** Phi_a3
+Z3_ast compute_phi_a3(Z3_context ctx, Z3_ast Lit_x_ui[][k]) {
+    Z3_ast each_translator[k];
+    for (int i=0; i<k; i++) {
+        Z3_ast each_u[n];
+        for (int u=0; u<n; u++) {
+            each_u[u] = Lit_x_ui[u][i];
+        }
+        Z3_ast disj_x_ui = Z3_mk_or(ctx, n, each_u);
+        each_translator[i] = disj_x_ui;
+    }
+    Z3_ast phi_a3 = Z3_mk_and(ctx, k, each_translator);
+    return phi_a3;
+}
+
 //***** Phi_a
 Z3_ast compute_phi_a(Z3_context ctx, Z3_ast Lit_x_ui[][k]) {
     Z3_ast phi_a1 = compute_phi_a1(ctx, Lit_x_ui);
     Z3_ast phi_a2 = compute_phi_a2(ctx, Lit_x_ui);
-    printf("coucou\n");
-    Z3_ast conj_phi_a[2] = {phi_a1, phi_a2};
-    Z3_ast phi_a = Z3_mk_and(ctx, 2, conj_phi_a);
+    Z3_ast phi_a3 = compute_phi_a3(ctx, Lit_x_ui);
+    
+    Z3_ast conj_phi_a[3] = {phi_a1, phi_a2, phi_a3};
+    Z3_ast phi_a = Z3_mk_and(ctx, 3, conj_phi_a);
     return phi_a;
 }
 
@@ -182,10 +198,21 @@ Z3_ast compute_phi_c(Z3_context ctx, int j, Z3_ast Lit_l_jh[][maxH]) {
 Z3_ast compute_phi_convertisseur(Z3_context ctx, BiConGraph biGraph, int j1, int j2, Z3_ast Lit_x_ui[][k]) {
     int n = orderG(biGraph.graph);
 
-    Z3_ast each_uv[n*n];
+    int counter = 0;
     for (int u=0; u<n; u++) {
         for (int v=0; v<n; v++) {
-            Z3_ast disj;
+            if (isEdgeHeterogeneous(biGraph, u, v)) {
+                if (biGraph.homogeneousComponents[j1][u] && biGraph.homogeneousComponents[j2][v]) {
+                    counter++;
+                }
+            }
+        }
+    }
+    
+    int index = 0;
+    Z3_ast each_uv[counter];
+    for (int u=0; u<n; u++) {
+        for (int v=0; v<n; v++) {
             if (isEdgeHeterogeneous(biGraph, u, v)) {
                 if (biGraph.homogeneousComponents[j1][u] && biGraph.homogeneousComponents[j2][v]) {
                     Z3_ast each_translator[k];
@@ -195,16 +222,14 @@ Z3_ast compute_phi_convertisseur(Z3_context ctx, BiConGraph biGraph, int j1, int
                         Z3_ast conj[2] = {x_ui, x_vi};
                         each_translator[i] = Z3_mk_or(ctx, 2, conj);
                     }
-                    disj = Z3_mk_or(ctx, k, each_translator);
+                    each_uv[index] = Z3_mk_or(ctx, k, each_translator);
+                    index++;
                 }
             }
-            else
-                disj = Z3_mk_false(ctx);
-
-            each_uv[u*n + v] = disj;
         }
     }
-    Z3_ast phi_convertisseur = Z3_mk_or(ctx, n*n, each_uv);
+    Z3_ast phi_convertisseur = Z3_mk_or(ctx, counter, each_uv);
+
     return phi_convertisseur;
 }
 
@@ -254,7 +279,7 @@ Z3_ast compute_phi_d(Z3_context ctx, BiConGraph biGraph, int j1, int j2, Z3_ast 
 Z3_ast compute_phi_r1(Z3_context ctx, int j1, Z3_ast Lit_p_j1j2[][maxJ]) {
     Z3_ast each_j2[maxJ-1];
     int shift_1 = 0;
-    for(int j2; j2<maxJ-1; j2++){
+    for(int j2=0; j2<maxJ; j2++){
         if(j1 == j2)
             shift_1 = 1;
         else {
@@ -262,7 +287,7 @@ Z3_ast compute_phi_r1(Z3_context ctx, int j1, Z3_ast Lit_p_j1j2[][maxJ]) {
 
             Z3_ast each_j3[maxJ-2];
             int shift_2 = 0;
-            for(int j3; j3<maxJ; j3++) {
+            for(int j3=0; j3<maxJ; j3++) {
                 if (j3 == j1 || j3 == j2)
                     shift_2++;
                 else
@@ -388,6 +413,13 @@ Z3_ast BiConReduction(Z3_context ctx, BiConGraph biGraph, int size){
 
 
 void getTranslatorSetFromModel(Z3_context ctx, Z3_model model, BiConGraph *graph, int size){
+    for (int u=0; u<n; u++) {
+        for (int i=0; i<size; i++) {
+            Z3_ast x_ui = getVariableIsIthTranslator(ctx, u, i);
+            if (valueOfVarInModel(ctx, model, x_ui))
+                addTranslator(graph, u);
+        }
+    }
     return;
 }
 
