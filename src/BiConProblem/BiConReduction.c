@@ -213,6 +213,36 @@ Z3_ast compute_phi_c(Z3_context ctx, int j, Z3_ast **Lit_l_jh, int maxH) {
 /********** Phi_d **********/
 /***************************/
 
+//***** Phi_convertisseur
+Z3_ast compute_phi_convertisseur(Z3_context ctx, BiConGraph biGraph, int j1, int j2, Z3_ast **Lit_x_ui, int k) {
+
+    return NULL;
+}
+
+//***** Phi_contigu
+Z3_ast compute_phi_contigu(Z3_context ctx, int j1, int j2, Z3_ast **Lit_l_jh, int maxH) {
+    Z3_ast each_h1[maxH-1];
+    for (int h1=1; h1<maxH; h1++) {
+        int h2 = h1 - 1;
+        Z3_ast l_j1h1 = Lit_l_jh[j1][h1];
+        Z3_ast l_j2h2 = Lit_l_jh[j2][h2];
+        Z3_ast conj[2] = {l_j1h1, l_j2h2};
+        each_h1[h2] = Z3_mk_and(ctx, 2, conj);
+    }
+    Z3_ast phi_contigu = Z3_mk_or(ctx, maxH-1, each_h1);
+    return phi_contigu;
+}
+
+//***** Phi_lien_et_contigu
+Z3_ast compute_phi_lien_et_contigu(Z3_context ctx, int j1, int j2, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int maxH) {
+    Z3_ast p_j1j2 = Lit_p_j1j2[j1][j2];
+    Z3_ast phi_contigu = compute_phi_contigu(ctx, j1, j2, Lit_l_jh, maxH);
+
+    Z3_ast conj_phi_lc[2] = {p_j1j2, phi_contigu};
+    Z3_ast phi_lien_et_contigu = Z3_mk_and(ctx, 2, conj_phi_lc);
+    return phi_lien_et_contigu;
+}
+
 //***** Phi_d
 Z3_ast compute_phi_d(Z3_context ctx, BiConGraph biGraph, int j1, int j2, Z3_ast **Lit_x_ui, Z3_ast **Lit_p_j1j2, Z3_ast **Lit_l_jh, int k, int maxH) {
     Z3_ast phi_convertisseur = compute_phi_convertisseur(ctx, biGraph, j1, j2, Lit_x_ui, k);
